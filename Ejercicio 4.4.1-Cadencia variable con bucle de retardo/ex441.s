@@ -4,15 +4,10 @@ len_on = . - msg_on
 msg_off: .ascii "LED OFF\n"
 len_off = . - msg_off
 
-.section .bss
-.align 3
-tspec: .quad 0,0
-
 .section .text
 .global _start
 
 .set SYS_write, 64
-.set SYS_nanosleep, 101
 .set SYS_exit, 93
 
 .macro PRINT buf, len
