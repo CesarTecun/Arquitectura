@@ -23,17 +23,13 @@ tspec: .quad 0,0
  svc #0
 .endm
 
-.macro SLEEP_MS ms
- ldr x0, =tspec
- mov x1, #0
- str x1, [x0]
- mov x1, \ms
- ldr x2, =1000000
- mul x1, x1, x2
- str x1, [x0, #8]
- mov x1, #0
- mov x8, #SYS_nanosleep
- svc #0
+.macro DELAY_MS ms
+ mov x3, \ms
+ mov x2, #50000
+ mul x3, x3, x2
+ mov x1, x3
+1: subs x1, x1, #1
+ b.ne 1b
 .endm
 
 _start:
@@ -43,11 +39,11 @@ loop:
  PRINT msg_on, len_on
  mov x0, x20
  lsr x0, x0, #1
- SLEEP_MS x0
+ DELAY_MS x0
  PRINT msg_off, len_off
  mov x0, x20
  lsr x0, x0, #1
- SLEEP_MS x0
+ DELAY_MS x0
  subs x20, x20, #50
  cmp x20, #250
  b.hs loop
